@@ -1,0 +1,42 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""ApplicationString"""
+type ApplicationString {
+  """Unique Identifier"""
+  id: ID!
+  key: String!
+  applicationStringType: String
+  value: String!
+  createdDate: DateTime
+  modifiedDate: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  ApplicationString: [ApplicationString!]!
+  ApplicationStringFindOne(key: String!): ApplicationString!
+}
+
+type Mutation {
+  CreateApplicationString(createApplicationStringInput: CreateApplicationStringInput!): ApplicationString!
+  UpdateApplicationString(id: Float!, updateApplicationStringInput: UpdateApplicationStringInput!): ApplicationString!
+  ApplicationStringDelete(id: Float!): ApplicationString!
+}
+
+input CreateApplicationStringInput {
+  key: String!
+  value: String!
+  applicationStringType: String!
+}
+
+input UpdateApplicationStringInput {
+  key: String
+  value: String
+  applicationStringType: String
+}
