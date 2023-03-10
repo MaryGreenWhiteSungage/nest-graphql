@@ -71,3 +71,30 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+Installing Prisma: https://www.prisma.io/docs/guides/migrate-to-prisma/migrate-from-typeorm
+npm install prisma --save-dev
+npx prisma init
+
+Next steps:
+
+1. Set the DATABASE_URL in the .env file to point to your existing database. If your database has no tables yet, read https://pris.ly/d/getting-started
+2. Set the provider of the datasource block in schema.prisma to match your database: postgresql, mysql, sqlite, sqlserver, mongodb or cockroachdb.
+3. Run prisma db pull to turn your database schema into a Prisma schema.
+4. Run prisma generate to generate the Prisma Client. You can then start querying your database.
+
+Introspect
+2.3. Run Prisma's introspection
+With your connection URL in place, you can introspect your database to generate your Prisma models:
+
+npx prisma db pull
+
+prisma generate
+
+Step 3. Install Prisma Client
+npm install @prisma/client --save
+
+codegen - generated types - https://the-guild.dev/graphql/codegen/docs/guides/graphql-modules @graphql-codegen/graphql-modules-preset
+npm install --save @graphql-codegen/cli @graphql-codegen/typescript @graphql-codegen/typescript-resolvers
+add codegen.yml
+npm run start:dev

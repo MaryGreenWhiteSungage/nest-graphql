@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UpdateApplicationStringInput } from 'src/coffees/dto/update-application-string.input/update-application-string.input';
-import { Repository } from 'typeorm/repository/Repository';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from 'src/prisma.service';
 import { CreateApplicationStringInput } from './dto/create-application-string.input/create-application-string.input';
+
 import { ApplicationString } from './models/application-string.model/application-string.model';
 
 @Injectable()
@@ -10,12 +10,33 @@ export class ApplicationStringService {
   constructor(
     @Inject(Logger)
     private readonly logger: Logger,
-    @InjectRepository(ApplicationString)
-    private readonly repository: Repository<ApplicationString>, // 👈👈nest
+    private readonly prisma: PrismaService, // 👈👈nest
   ) {}
-  async findAll() {
+
+  async findMany(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.ApplicationStringWhereUniqueInput;
+    where?: Prisma.ApplicationStringWhereInput;
+    orderBy?: Prisma.ApplicationStringOrderByWithRelationInput;
+  }): Promise<ApplicationString[]> {
+    const { skip, take, cursor, where, orderBy } = params;
     this.logger.debug('Calling findAll.');
-    return await this.repository.find();
+    return this.prisma.applicationString.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
+  }
+
+  async findUnique(
+    userWhereUniqueInput: Prisma.ApplicationStringWhereUniqueInput,
+  ): Promise<ApplicationString | null> {
+    return this.prisma.applicationString.findUnique({
+      where: userWhereUniqueInput,
+    });
   }
 
   async findOne(key: string) {
@@ -25,7 +46,10 @@ export class ApplicationStringService {
       throw new Error(`${__filename} : missing input value key`);
     }
     try {
-      const returnValue = await this.repository.findOne({ where: { key } });
+      this.logger.debug('Calling findOne.');
+      const returnValue = await this.prisma.applicationString.findFirst({
+        where: { key: key },
+      });
       return returnValue;
     } catch (e) {
       this.logger.debug('findOne Error', e);
@@ -40,7 +64,7 @@ export class ApplicationStringService {
       throw new Error(`${__filename} : missing input value key`);
     }
     try {
-      const returnValue = await this.repository.findOne({ where: { id } });
+      const returnValue = await this.findUnique({ id });
       return returnValue;
     } catch (e) {
       this.logger.debug('findById Error', e);
@@ -48,36 +72,38 @@ export class ApplicationStringService {
     }
   }
 
-  async create(createInput: CreateApplicationStringInput) {
+  async create(dataIn: CreateApplicationStringInput) {
     this.logger.debug('Calling create.');
-    if (!createInput) {
+    if (!dataIn) {
       throw new Error(`${__filename} : missing input value createInput`);
     }
-    const currentTime = new Date();
-    const newObject = this.repository.create(createInput);
-    newObject.createdDate = currentTime;
-    newObject.modifiedDate = currentTime;
-    return await this.repository.save(newObject);
+    let data: Prisma.ApplicationStringCreateInput;
+    data.createdDate = new Date();
+    data.modifiedDate = new Date();
+    data.applicationStringType = dataIn.applicationStringType;
+    data.key = dataIn.key;
+    data.value = dataIn.value;
+
+    return this.prisma.applicationString.create({ data });
   }
 
-  async update(id: number, updateInput: UpdateApplicationStringInput) {
+  async update(id: number, data: Prisma.ApplicationStringUpdateInput) {
     this.logger.debug('Calling update.');
-    if (!updateInput) {
+    if (!data) {
       throw new Error(`${__filename} : missing input value updateInput`);
     }
     if (!id) {
       throw new Error(`${__filename} : missing input value id`);
     }
+
     const currentTime = new Date();
-    const newObject: ApplicationString = await this.repository.preload({
-      id,
-      ...updateInput,
+
+    data.modifiedDate = currentTime;
+
+    return this.prisma.applicationString.update({
+      data,
+      where: { id },
     });
-    if (!newObject) {
-      throw new Error(`${__filename} : Could not find record for : ${id}`);
-    }
-    newObject.modifiedDate = currentTime;
-    return await this.repository.save(newObject);
   }
 
   async delete(id: number) {
@@ -87,11 +113,11 @@ export class ApplicationStringService {
       throw new Error(`${__filename} : missing input value id`);
     }
     try {
-      const itemToDelete = await this.findById(id);
-      const returnValue = await this.repository.delete(itemToDelete);
-      return returnValue;
+      return this.prisma.applicationString.delete({
+        where: { id },
+      });
     } catch (e) {
-      this.logger.debug('findOne Error', e);
+      this.logger.debug('delete Error', e);
       throw new Error(`${__filename} : ${e}`);
     }
   }

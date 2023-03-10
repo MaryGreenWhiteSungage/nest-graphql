@@ -1,0 +1,13 @@
+overwrite: true
+schema: './schema.gql'
+documents: 'src/application-string/models/application-string.model/*.ts'
+generates:
+  src/graphql/__generated__.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      apolloReactCommonImportFrom: '@keystone-6/core/admin-ui/apollo'
+      apolloReactHooksImportFrom: '@keystone-6/core/admin-ui/apollo'
+      gqlImport: '@keystone-6/core/admin-ui/apollo#gql'

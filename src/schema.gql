@@ -2,6 +2,8 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+directive @upper on FIELD_DEFINITION
+
 """ApplicationString"""
 type ApplicationString {
   """Unique Identifier"""
@@ -24,7 +26,7 @@ type Query {
 }
 
 type Mutation {
-  CreateApplicationString(createApplicationStringInput: CreateApplicationStringInput!): ApplicationString!
+  CreateApplicationString(ApplicationStringCreateInput: CreateApplicationStringInput!): ApplicationString!
   UpdateApplicationString(id: Float!, updateApplicationStringInput: UpdateApplicationStringInput!): ApplicationString!
   ApplicationStringDelete(id: Float!): ApplicationString!
 }
@@ -33,10 +35,14 @@ input CreateApplicationStringInput {
   key: String!
   value: String!
   applicationStringType: String!
+  modifiedDate: DateTime
+  createdDate: DateTime
 }
 
 input UpdateApplicationStringInput {
   key: String
   value: String
   applicationStringType: String
+  modifiedDate: DateTime
+  createdDate: DateTime
 }

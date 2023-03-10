@@ -1,8 +1,8 @@
 import { ParseIntPipe } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { UpdateApplicationStringInput } from 'src/application-string/dto/update-application-string.input/update-application-string.input';
 import { ApplicationStringService } from './application-string.service';
 import { CreateApplicationStringInput } from './dto/create-application-string.input/create-application-string.input';
-import { UpdateApplicationStringInput } from 'src/coffees/dto/update-application-string.input/update-application-string.input';
 import { ApplicationString } from './models/application-string.model/application-string.model';
 
 @Resolver()
@@ -10,7 +10,7 @@ export class ApplicationStringResolver {
   constructor(private readonly service: ApplicationStringService) {}
   @Query(() => [ApplicationString], { name: 'ApplicationString' })
   async findAll() {
-    return this.service.findAll();
+    return this.service.findMany({});
   }
 
   @Query(() => ApplicationString, { name: 'ApplicationStringFindOne' })
@@ -20,10 +20,10 @@ export class ApplicationStringResolver {
 
   @Mutation(() => ApplicationString, { name: 'CreateApplicationString' })
   async create(
-    @Args('createApplicationStringInput')
-    createApplicationStringInput: CreateApplicationStringInput,
+    @Args('ApplicationStringCreateInput')
+    applicationStringCreateInput: CreateApplicationStringInput,
   ) {
-    return this.service.create(createApplicationStringInput);
+    return this.service.create(applicationStringCreateInput);
   }
 
   @Mutation(() => ApplicationString, { name: 'UpdateApplicationString' })
