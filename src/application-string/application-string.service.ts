@@ -73,13 +73,16 @@ export class ApplicationStringService {
   }
 
   async create(dataIn: CreateApplicationStringInput) {
-    this.logger.debug('Calling create.');
+    this.logger.debug(`Calling create. ${JSON.stringify(dataIn)}`);
     if (!dataIn) {
       throw new Error(`${__filename} : missing input value createInput`);
     }
-    let data: Prisma.ApplicationStringCreateInput;
-    data.createdDate = new Date();
-    data.modifiedDate = new Date();
+    const data: Prisma.ApplicationStringCreateInput = {
+      createdDate: new Date(),
+      modifiedDate: new Date(),
+      ...dataIn,
+    };
+
     data.applicationStringType = dataIn.applicationStringType;
     data.key = dataIn.key;
     data.value = dataIn.value;
@@ -87,18 +90,19 @@ export class ApplicationStringService {
     return this.prisma.applicationString.create({ data });
   }
 
-  async update(id: number, data: Prisma.ApplicationStringUpdateInput) {
+  async update(id: number, dataIn: Prisma.ApplicationStringUpdateInput) {
     this.logger.debug('Calling update.');
-    if (!data) {
+    if (!dataIn) {
       throw new Error(`${__filename} : missing input value updateInput`);
     }
     if (!id) {
       throw new Error(`${__filename} : missing input value id`);
     }
 
-    const currentTime = new Date();
-
-    data.modifiedDate = currentTime;
+    const data: Prisma.ApplicationStringUpdateInput = {
+      modifiedDate: new Date(),
+      ...dataIn,
+    };
 
     return this.prisma.applicationString.update({
       data,
