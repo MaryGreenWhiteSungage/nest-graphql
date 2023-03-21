@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import { AppModule } from './app.module';
+import { SeedService } from './seed/prisma/seed.service';
 
 /*
 Nest has to bootstrap the application first (instantiating modules and providers, 
@@ -17,6 +18,8 @@ async function bootstrap() {
     //   logger: createLogger(options),
   });
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+  const seedService = app.get(SeedService);
+  seedService.seed();
   await app.listen(3000);
 }
 bootstrap();

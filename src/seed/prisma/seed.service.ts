@@ -25,8 +25,6 @@ export class SeedService {
       });
       await this.prisma[model.name].createMany({ data: model.data });
 
-      //await Promise.all(promises);
-
       console.log('✅ Database was seeded with Initial data');
       return true;
     } catch (e) {
