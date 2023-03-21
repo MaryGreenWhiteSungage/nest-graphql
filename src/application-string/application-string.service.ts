@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma.service';
-import { CreateApplicationStringInput } from './dto/create-application-string.input/create-application-string.input';
 
+import { CreateApplicationStringInput } from './dto/create-application-string.input/create-application-string.input';
+import { PrismaService } from 'src/prisma.service';
 import { ApplicationString } from './models/application-string.model/application-string.model';
 
 @Injectable()

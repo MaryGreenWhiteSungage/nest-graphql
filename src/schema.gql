@@ -26,6 +26,7 @@ type Query {
 }
 
 type Mutation {
+  Seed: Boolean!
   CreateApplicationString(ApplicationStringCreateInput: CreateApplicationStringInput!): ApplicationString!
   UpdateApplicationString(id: Float!, updateApplicationStringInput: UpdateApplicationStringInput!): ApplicationString!
   ApplicationStringDelete(id: Float!): ApplicationString!

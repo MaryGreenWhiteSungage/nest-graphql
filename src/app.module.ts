@@ -17,6 +17,7 @@ import { AppController } from './app.controller';
 import { PrismaService } from './prisma.service';
 import { DirectiveLocation, GraphQLDirective } from 'graphql';
 import { upperDirectiveTransformer } from './common/upper-case.directive';
+import { SeederModule } from './seed/prisma/seed.module';
 
 const logger: LoggerConfig = new LoggerConfig();
 
@@ -50,6 +51,7 @@ const graphQLModule = GraphQLModule.forRoot<ApolloDriverConfig>({
       ],
     }),
     WinstonModule.forRoot(logger.console()),
+    SeederModule,
     ApplicationStringModule,
   ],
   controllers: [AppController],
