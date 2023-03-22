@@ -3,7 +3,7 @@
     "plugins": ["@nestjs/graphql", "@nestjs/graphql/plugin"],
     "assets": [
       {
-        "include": "../src/i18n/**/*",
+        "include": "./src/i18n/**/*",
         "watchAssets": true,
         "outDir": "dist/src"
       }

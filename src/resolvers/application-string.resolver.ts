@@ -1,9 +1,9 @@
 import { ParseIntPipe } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
-import { UpdateApplicationStringInput } from 'src/application-string/dto/update-application-string.input/update-application-string.input';
-import { ApplicationStringService } from './application-string.service';
-import { CreateApplicationStringInput } from './dto/create-application-string.input/create-application-string.input';
-import { ApplicationString } from './models/application-string.model/application-string.model';
+import { UpdateApplicationStringInput } from 'src/dto/update-application-string.input/update-application-string.input';
+import { ApplicationStringService } from 'src/services/application-string.service';
+import { CreateApplicationStringInput } from 'src/dto/create-application-string.input/create-application-string.input';
+import { ApplicationString } from 'src/models/application-string.model/application-string.model';
 
 @Resolver()
 export class ApplicationStringResolver {
