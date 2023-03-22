@@ -1,9 +1,23 @@
 {
   "compilerOptions": {
-    "plugins": ["@nestjs/graphql"],
-    "assets": [{ "include": "i18n/**/*", "watchAssets": true }]
+    "plugins": ["@nestjs/graphql", "@nestjs/graphql/plugin"],
+    "assets": [
+      {
+        "include": "../src/i18n/**/*",
+        "watchAssets": true,
+        "outDir": "dist/src"
+      }
+    ]
   },
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "src",
+  "plugins": [
+    {
+      "name": "@nestjs/graphql/plugin",
+      "options": {
+        "typeFileNameSuffix": [".input.ts", ".model.ts"]
+      }
+    }
+  ]
 }
