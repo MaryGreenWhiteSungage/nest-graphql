@@ -4,13 +4,15 @@ import { Prisma } from '@prisma/client';
 import { CreateApplicationStringInput } from '../dto/create-application-string.input/create-application-string.input';
 import { PrismaService } from './prisma.service';
 import { ApplicationString } from '../models/application-string.model/application-string.model';
+import { BaseError } from 'src/shared/errors/graphQLBaseError';
+import { StatusCode } from 'shared/errorCode';
 
 @Injectable()
 export class ApplicationStringService {
   constructor(
     @Inject(Logger)
     private readonly logger: Logger,
-    private readonly prisma: PrismaService, // 👈👈nest
+    private readonly prisma: PrismaService,
   ) {}
 
   async findMany(params: {
@@ -22,13 +24,17 @@ export class ApplicationStringService {
   }): Promise<ApplicationString[]> {
     const { skip, take, cursor, where, orderBy } = params;
     this.logger.debug('Calling findAll.');
-    return this.prisma.applicationString.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+    try {
+      return this.prisma.applicationString.findMany({
+        skip,
+        take,
+        cursor,
+        where,
+        orderBy,
+      });
+    } catch (e) {
+      throw new BaseError(e.message, e.code, StatusCode.BAD_REQUEST, {});
+    }
   }
 
   async findUnique(
@@ -50,10 +56,12 @@ export class ApplicationStringService {
       const returnValue = await this.prisma.applicationString.findFirst({
         where: { key: key },
       });
+      if (!returnValue) {
+        throw new Error(`Record for key: ${key} was not found.`);
+      }
       return returnValue;
     } catch (e) {
-      this.logger.debug('findOne Error', e);
-      throw new Error(`${__filename} : ${e}`);
+      throw new BaseError(e.message, e.code, StatusCode.NOT_FOUND, {});
     }
   }
 
@@ -67,8 +75,7 @@ export class ApplicationStringService {
       const returnValue = await this.findUnique({ id });
       return returnValue;
     } catch (e) {
-      this.logger.debug('findById Error', e);
-      throw new Error(`${__filename} : ${e}`);
+      throw new BaseError(e.message, e.code, StatusCode.BAD_REQUEST, {});
     }
   }
 
@@ -77,17 +84,21 @@ export class ApplicationStringService {
     if (!dataIn) {
       throw new Error(`${__filename} : missing input value createInput`);
     }
-    const data: Prisma.ApplicationStringCreateInput = {
-      createdDate: new Date(),
-      modifiedDate: new Date(),
-      ...dataIn,
-    };
+    try {
+      const data: Prisma.ApplicationStringCreateInput = {
+        createdDate: new Date(),
+        modifiedDate: new Date(),
+        ...dataIn,
+      };
 
-    data.applicationStringType = dataIn.applicationStringType;
-    data.key = dataIn.key;
-    data.value = dataIn.value;
+      data.applicationStringType = dataIn.applicationStringType;
+      data.key = dataIn.key;
+      data.value = dataIn.value;
 
-    return this.prisma.applicationString.create({ data });
+      return this.prisma.applicationString.create({ data });
+    } catch (e) {
+      throw new BaseError(e.message, e.code, StatusCode.BAD_REQUEST, {});
+    }
   }
 
   async update(id: number, dataIn: Prisma.ApplicationStringUpdateInput) {
@@ -99,30 +110,33 @@ export class ApplicationStringService {
       throw new Error(`${__filename} : missing input value id`);
     }
 
-    const data: Prisma.ApplicationStringUpdateInput = {
-      modifiedDate: new Date(),
-      ...dataIn,
-    };
+    try {
+      const data: Prisma.ApplicationStringUpdateInput = {
+        modifiedDate: new Date(),
+        ...dataIn,
+      };
 
-    return this.prisma.applicationString.update({
-      data,
-      where: { id },
-    });
+      return this.prisma.applicationString.update({
+        data,
+        where: { id: id },
+      });
+    } catch (e) {
+      throw new BaseError(e.message, e.code, StatusCode.BAD_REQUEST, {});
+    }
   }
 
   async delete(id: number) {
     this.logger.debug('Calling delete.');
     if (!id) {
       this.logger.debug('test', new Error(`Id not found.`));
-      throw new Error(`${__filename} : missing input value id`);
+      throw new Error(`delete : missing input value id`);
     }
     try {
-      return this.prisma.applicationString.delete({
+      return await this.prisma.applicationString.delete({
         where: { id },
       });
     } catch (e) {
-      this.logger.debug('delete Error', e);
-      throw new Error(`${__filename} : ${e}`);
+      throw new BaseError(e.message, e.code, StatusCode.BAD_REQUEST, {});
     }
   }
 }

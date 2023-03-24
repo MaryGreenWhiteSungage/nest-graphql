@@ -15,7 +15,12 @@ import { ApplicationStringModule } from './modules/application-string.module';
    https://www.tevpro.com/blog/nestjs-resolving-dependency-injection-the-order-matters */
 import { AppController } from './controllers/app.controller';
 import { PrismaService } from './services/prisma.service';
-import { DirectiveLocation, GraphQLDirective } from 'graphql';
+import {
+  DirectiveLocation,
+  GraphQLDirective,
+  GraphQLError,
+  GraphQLFormattedError,
+} from 'graphql';
 import { upperDirectiveTransformer } from './common/upper-case.directive';
 import { SeederModule } from './modules/seed.module';
 
@@ -26,6 +31,15 @@ const graphQLModule = GraphQLModule.forRoot<ApolloDriverConfig>({
   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
   transformSchema: (schema) => upperDirectiveTransformer(schema, 'upper'),
   installSubscriptionHandlers: true,
+  // formatError: (error: GraphQLError) => {
+  //   const code = error?.extensions?.exception?.code || undefined;
+  //   const trace = error?.extensions?.exception?.stacktrace?.map((m) => m);
+  //   const message = error?.message;
+  //   const graphQLFormattedError: GraphQLFormattedError = {
+  //     message: `GraphQL error: code ${code} message : ${message} \n\n stack trace: ${trace}`,
+  //   };
+  //   return graphQLFormattedError;
+  // },
   buildSchemaOptions: {
     directives: [
       new GraphQLDirective({

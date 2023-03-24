@@ -6,6 +6,6 @@ export class SeedResolver {
   constructor(private readonly service: SeedService) {}
   @Mutation(() => Boolean, { name: 'Seed' })
   async findAll() {
-    return this.service.seed();
+    return await this.service.seed();
   }
 }

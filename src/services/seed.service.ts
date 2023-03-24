@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { StatusCode } from 'shared/errorCode';
 import { PrismaService } from 'src/services/prisma.service';
+import { BaseError } from 'src/shared/errors/graphQLBaseError';
 
 import { initialModelsToCreate } from '../seed/prisma/data';
 
@@ -29,7 +31,12 @@ export class SeedService {
       return true;
     } catch (e) {
       console.error('❌ Seeding Initial data error');
-      console.error(e);
+      throw new BaseError(
+        e.message,
+        e.code,
+        StatusCode.INTERNAL_SERVER_ERROR,
+        {},
+      );
     }
   }
 }

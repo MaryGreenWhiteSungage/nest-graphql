@@ -1,9 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
-import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './shared/errors/exceptions.filter';
-import { SeedService } from './services/seed.service';
+import { AppModule } from 'src/app.module';
+import { SeedService } from 'src/services/seed.service';
 
 /*
 Nest has to bootstrap the application first (instantiating modules and providers, 
@@ -15,12 +14,12 @@ Nest has to bootstrap the application first (instantiating modules and providers
   into the Logger class, forwarding all calls to it: https://www.npmjs.com/package/nest-winston
 */
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {});
-  const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
-  app.useLogger(logger);
-  // app.useGlobalFilters(new HttpExceptionFilter(logger));
+  const app = await NestFactory.create(AppModule, {
+    //   logger: createLogger(options),
+  });
+  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   const seedService = app.get(SeedService);
-  await seedService.seed();
+  seedService.seed();
   await app.listen(3000);
 }
 bootstrap();

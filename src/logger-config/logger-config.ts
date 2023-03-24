@@ -1,15 +1,30 @@
 import * as winston from 'winston';
 import { format } from 'winston';
+/*
+const consoleFormatInfoNewPlatform = (info) => {
+  const { level, message, location, extensions, ...details } = info;
+  const locationStr = location ? `[${location}]` : '';
+  const errorCode = extensions?.code ? `[${extensions?.code}]` : '';
+  const detailsStr = Object.keys(details).length
+    ? `${JSON.stringify(details, null, 2)}`
+    : '';
 
+  if (locationStr || errorCode)
+    return `${level} - ${errorCode}${locationStr} - ${message} ${detailsStr}`;
+
+  return `${level} - ${message} ${detailsStr}`;
+};
+*/
 const transportValues = {
   console: new winston.transports.Console({
-    level: 'silly',
+    level: process.env.LOGGER_LEVEL as string | 'info',
     format: format.combine(
       format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss',
       }),
       format.label({ label: 'myTestApplication' }),
       format.colorize({
+        all: true,
         colors: {
           info: 'blue',
           debug: 'yellow',
@@ -17,9 +32,17 @@ const transportValues = {
         },
       }),
       format.printf((info) => {
+        const ext = info.extensions;
+        const details = info.details;
+        const errorCode = ext?.code ? `[${ext?.code}]` : '';
+        const detailsStr =
+          details && Object.keys(details).length
+            ? `${JSON.stringify(details, null, 2)}`
+            : '';
+
         return `${info.timestamp} [${info.level}] [${info.label}] [${
           info.context ? info.context : info.stack ? info.stack : 'default'
-        }] ${info.message}`;
+        }] ${info.message}\n\n ${errorCode} : ${detailsStr}`;
       }),
       format.align(),
     ),
