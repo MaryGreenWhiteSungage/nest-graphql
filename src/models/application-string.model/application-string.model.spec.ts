@@ -1,7 +1,7 @@
-import { ApplicationStringModel } from './application-string.model';
+import { ApplicationString } from './application-string.model';
 
 describe('ApplicationStringModel', () => {
   it('should be defined', () => {
-    expect(new ApplicationStringModel()).toBeDefined();
+    expect(new ApplicationString()).toBeDefined();
   });
 });

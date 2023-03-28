@@ -1,24 +1,22 @@
 import { ID, Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-@Entity()
+
 @ObjectType({ description: 'ApplicationString' })
 export class ApplicationString {
-  @PrimaryGeneratedColumn()
   @Field(() => ID, { description: 'Unique Identifier' })
   id: number;
 
-  @Column()
+  @Field()
   key: string;
 
-  @Column()
+  @Field()
   applicationStringType?: string | null;
 
-  @Column()
+  @Field()
   value: string;
 
-  @Column()
+  @Field()
   createdDate?: Date | null;
 
-  @Column()
+  @Field()
   modifiedDate?: Date | null;
 }

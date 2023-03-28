@@ -31,15 +31,6 @@ const graphQLModule = GraphQLModule.forRoot<ApolloDriverConfig>({
   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
   transformSchema: (schema) => upperDirectiveTransformer(schema, 'upper'),
   installSubscriptionHandlers: true,
-  // formatError: (error: GraphQLError) => {
-  //   const code = error?.extensions?.exception?.code || undefined;
-  //   const trace = error?.extensions?.exception?.stacktrace?.map((m) => m);
-  //   const message = error?.message;
-  //   const graphQLFormattedError: GraphQLFormattedError = {
-  //     message: `GraphQL error: code ${code} message : ${message} \n\n stack trace: ${trace}`,
-  //   };
-  //   return graphQLFormattedError;
-  // },
   buildSchemaOptions: {
     directives: [
       new GraphQLDirective({
