@@ -8,6 +8,8 @@ directive @upper on FIELD_DEFINITION
 type ApplicationString {
   """Unique Identifier"""
   id: ID!
+
+  """Key"""
   key: String!
   applicationStringType: String
   value: String!

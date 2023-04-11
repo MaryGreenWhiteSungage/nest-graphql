@@ -116,7 +116,7 @@ export class ApplicationStringService {
         ...dataIn,
       };
 
-      return this.prisma.applicationString.update({
+      return await this.prisma.applicationString.update({
         data,
         where: { id: id },
       });

@@ -5,7 +5,7 @@ export class ApplicationString {
   @Field(() => ID, { description: 'Unique Identifier' })
   id: number;
 
-  @Field()
+  @Field({ description: 'Key', defaultValue: 'SungageKey' })
   key: string;
 
   @Field()
