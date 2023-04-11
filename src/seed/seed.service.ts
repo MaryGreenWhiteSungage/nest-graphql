@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { StatusCode } from 'shared/errorCode';
-import { PrismaService } from 'src/services/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { BaseError } from 'src/shared/errors/graphQLBaseError';
 
-import { initialModelsToCreate } from '../seed/prisma/data';
+import { initialModelsToCreate } from './data';
 
 @Injectable()
 export class SeedService {

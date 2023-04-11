@@ -1,9 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
-import { CreateApplicationStringInput } from '../dto/create-application-string.input/create-application-string.input';
-import { PrismaService } from './prisma.service';
-import { ApplicationString } from '../models/application-string.model/application-string.model';
+import { CreateApplicationStringInput } from './dto/create-application-string.input';
+import { PrismaService } from '../prisma/prisma.service';
+import { ApplicationString } from './application-string.model';
 import { BaseError } from 'src/shared/errors/graphQLBaseError';
 import { StatusCode } from 'shared/errorCode';
 

@@ -3,7 +3,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './shared/errors/exceptions.filter';
-import { SeedService } from './services/seed.service';
+import { SeedService } from './seed/seed.service';
 
 /*
 Nest has to bootstrap the application first (instantiating modules and providers, 

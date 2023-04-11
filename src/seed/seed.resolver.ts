@@ -1,5 +1,5 @@
 import { Resolver, Mutation } from '@nestjs/graphql';
-import { SeedService } from '../services/seed.service';
+import { SeedService } from './seed.service';
 
 @Resolver()
 export class SeedResolver {

@@ -8,13 +8,13 @@ import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'path';
 import { join } from 'path';
 import { LoggerConfig } from './logger-config/logger-config';
-import { AppService } from './services/app.service';
+import { AppService } from './app.service';
 
-import { ApplicationStringModule } from './modules/application-string.module';
+import { ApplicationStringModule } from './application-strings/application-string.module';
 /* must come last. 
    https://www.tevpro.com/blog/nestjs-resolving-dependency-injection-the-order-matters */
-import { AppController } from './controllers/app.controller';
-import { PrismaService } from './services/prisma.service';
+import { AppController } from './app.controller';
+import { PrismaService } from './prisma/prisma.service';
 import {
   DirectiveLocation,
   GraphQLDirective,
@@ -22,7 +22,7 @@ import {
   GraphQLFormattedError,
 } from 'graphql';
 import { upperDirectiveTransformer } from './common/upper-case.directive';
-import { SeederModule } from './modules/seed.module';
+import { SeederModule } from './seed/seed.module';
 
 const logger: LoggerConfig = new LoggerConfig();
 

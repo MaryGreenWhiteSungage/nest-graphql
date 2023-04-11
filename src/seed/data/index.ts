@@ -1,4 +1,4 @@
-import { applicationStrings } from './applicationStrings/applicationStrings';
+import { applicationStrings } from './applicationStrings';
 
 // NOTE: Pay attention to order when you putting new models into this array, it's critically important!
 export const initialModelsToCreate = [

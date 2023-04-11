@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { SeederModule } from './modules/seed.module';
+import { SeederModule } from './seed/seed.module';
 
-import { SeedService } from './services/seed.service';
+import { SeedService } from './seed/seed.service';
 import { Logger } from 'winston';
 /*
 Nest has to bootstrap the application first (instantiating modules and providers, 

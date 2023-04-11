@@ -1,4 +1,4 @@
-import { CreateApplicationStringInput } from 'src/dto/create-application-string.input/create-application-string.input';
+import { CreateApplicationStringInput } from '../../application-strings/dto/create-application-string.input';
 export enum ApplicationStrings {
   FUNDING_PORTAL_APPLICATION_NAME = 'FUNDING_PORTAL_APPLICATION_NAME',
   PUBLISH_MESSAGE = 'PUBLISH_MESSAGE',

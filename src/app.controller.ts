@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { I18n, I18nContext } from 'nestjs-i18n';
 
-import { AppService } from '../services/app.service';
+import { AppService } from './app.service';
 
 @Controller()
 export class AppController {

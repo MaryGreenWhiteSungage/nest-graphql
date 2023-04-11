@@ -1,4 +1,4 @@
-import { ApplicationString } from './application-string.model';
+import { ApplicationString } from '../models/application-string.model/application-string.model';
 
 describe('ApplicationStringModel', () => {
   it('should be defined', () => {
