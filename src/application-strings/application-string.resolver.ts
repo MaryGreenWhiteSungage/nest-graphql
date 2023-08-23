@@ -18,6 +18,18 @@ export class ApplicationStringResolver {
     return this.service.findOne(key);
   }
 
+  /*
+  mutation {
+    CreateApplicationString(ApplicationStringCreateInput: {
+		key: "dk1" ,
+		value: "test Demo",
+		applicationStringType: "demoType"
+}) {
+   id
+  }
+}
+  */
+
   @Mutation(() => ApplicationString, { name: 'CreateApplicationString' })
   async create(
     @Args('ApplicationStringCreateInput')

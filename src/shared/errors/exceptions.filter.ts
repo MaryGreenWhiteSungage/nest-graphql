@@ -23,7 +23,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     this.logger.error(`Exception Filter called!`);
     response.status(status).json({
-      message: 'HttpExceptionFilter: exception filter',
+      message: exception.getResponse().toString(),
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,

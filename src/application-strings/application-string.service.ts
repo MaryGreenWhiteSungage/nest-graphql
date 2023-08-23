@@ -91,10 +91,6 @@ export class ApplicationStringService {
         ...dataIn,
       };
 
-      data.applicationStringType = dataIn.applicationStringType;
-      data.key = dataIn.key;
-      data.value = dataIn.value;
-
       return this.prisma.applicationString.create({ data });
     } catch (e) {
       throw new BaseError(e.message, e.code, StatusCode.BAD_REQUEST, {});

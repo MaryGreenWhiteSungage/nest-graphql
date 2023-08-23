@@ -21,6 +21,6 @@ async function bootstrap() {
   // app.useGlobalFilters(new HttpExceptionFilter(logger));
   const seedService = app.get(SeedService);
   await seedService.seed();
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();

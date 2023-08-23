@@ -1,0 +1,273 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ApplicationString {
+  id                    Int      @id() @default(autoincrement())
+  key                   String   @db.VarChar
+  applicationStringType String   @db.VarChar
+  value                 String   @db.VarChar
+  createdDate           DateTime @db.Timestamp(6)
+  modifiedDate          DateTime @db.Timestamp(6)
+}
+
+
+model Lender {
+  id                     String               @id @default(uuid()) @postgresql.Uuid
+  name                   String               @default("")
+  lenderConfiguration    LenderConfiguration? @relation("Lender_lenderConfiguration", fields: [lenderConfigurationId], references: [id])
+  lenderConfigurationId  String?              @unique @map("lenderConfiguration") @postgresql.Uuid
+  disbursements          Disbursement[]       @relation("Disbursement_lender")
+  lendingPartnerUser     LendingPartnerUser[] @relation("LendingPartnerUser_lender")
+  transactions           Transaction[]        @relation("Transaction_lender")
+  createdAt              DateTime?            @default(now())
+  updatedAt              DateTime?            @updatedAt
+  createdBy              User?                @relation("Lender_createdBy", fields: [createdById], references: [id])
+  createdById            String?              @map("createdBy") @postgresql.Uuid
+  updatedBy              User?                @relation("Lender_updatedBy", fields: [updatedById], references: [id])
+  updatedById            String?              @map("updatedBy") @postgresql.Uuid
+  from_Attachment_lender Attachment[]         @relation("Attachment_lender")
+
+  @@index([createdById])
+  @@index([updatedById])
+}
+
+model LenderConfiguration {
+  id                                        String    @id @default(uuid()) @postgresql.Uuid
+  lender                                    Lender?   @relation("Lender_lenderConfiguration")
+  genericLenderAttachmentMaxFilesizeInBytes Int?
+  createdAt                                 DateTime? @default(now())
+  updatedAt                                 DateTime? @updatedAt
+  createdBy                                 User?     @relation("LenderConfiguration_createdBy", fields: [createdById], references: [id])
+  createdById                               String?   @map("createdBy") @postgresql.Uuid
+  updatedBy                                 User?     @relation("LenderConfiguration_updatedBy", fields: [updatedById], references: [id])
+  updatedById                               String?   @map("updatedBy") @postgresql.Uuid
+
+  @@index([createdById])
+  @@index([updatedById])
+}
+
+model Permission {
+  id    String @id @default(uuid()) @postgresql.Uuid
+  value String @unique @default("")
+  roles Role[] @relation("Permission_roles")
+}
+
+model Role {
+  id               String            @id @default(uuid()) @postgresql.Uuid
+  name             String            @unique @default("")
+  permissions      Permission[]      @relation("Permission_roles")
+  modelPermissions ModelPermission[] @relation("ModelPermission_role")
+  users            User[]            @relation("Role_users")
+}
+
+model Signature {
+  id                              String               @id @default(uuid()) @postgresql.Uuid
+  user                            User?                @relation("Signature_user", fields: [userId], references: [id])
+  userId                          String?              @map("user") @postgresql.Uuid
+  signedAt                        DateTime?
+  viewedAt                        DateTime?
+  ipAddress                       String               @default("")
+  userIdString                    String               @default("")
+  status                          SignatureStatusType? @default(Sent)
+  recipientId                     String               @default("")
+  createdAt                       DateTime?            @default(now())
+  updatedAt                       DateTime?            @updatedAt
+  createdBy                       User?                @relation("Signature_createdBy", fields: [createdById], references: [id])
+  createdById                     String?              @map("createdBy") @postgresql.Uuid
+  updatedBy                       User?                @relation("Signature_updatedBy", fields: [updatedById], references: [id])
+  updatedById                     String?              @map("updatedBy") @postgresql.Uuid
+  from_SigningDocument_signature1 SigningDocument[]    @relation("SigningDocument_signature1")
+  from_SigningDocument_signature2 SigningDocument[]    @relation("SigningDocument_signature2")
+
+  @@index([userId])
+  @@index([createdById])
+  @@index([updatedById])
+}
+
+model SigningDocument {
+  id                                           String                          @id @default(uuid()) @postgresql.Uuid
+  certificate                                  Attachment?                     @relation("SigningDocument_certificate", fields: [certificateId], references: [id])
+  certificateId                                String?                         @map("certificate") @postgresql.Uuid
+  documentPdf                                  Attachment?                     @relation("SigningDocument_documentPdf", fields: [documentPdfId], references: [id])
+  documentPdfId                                String?                         @map("documentPdf") @postgresql.Uuid
+  signature1                                   Signature?                      @relation("SigningDocument_signature1", fields: [signature1Id], references: [id])
+  signature1Id                                 String?                         @map("signature1") @postgresql.Uuid
+  signature2                                   Signature?                      @relation("SigningDocument_signature2", fields: [signature2Id], references: [id])
+  signature2Id                                 String?                         @map("signature2") @postgresql.Uuid
+  completedAt                                  DateTime?
+  envelopeId                                   String                          @default("")
+  status                                       SigningDocumentStatusType?      @default(Sent)
+  documentType                                 SigningDocumentDocumentTypeType @default(other)
+  createdAt                                    DateTime?                       @default(now())
+  updatedAt                                    DateTime?                       @updatedAt
+  createdBy                                    User?                           @relation("SigningDocument_createdBy", fields: [createdById], references: [id])
+  createdById                                  String?                         @map("createdBy") @postgresql.Uuid
+  updatedBy                                    User?                           @relation("SigningDocument_updatedBy", fields: [updatedById], references: [id])
+  updatedById                                  String?                         @map("updatedBy") @postgresql.Uuid
+  from_Agreement_signingDocument               Agreement[]                     @relation("Agreement_signingDocument")
+  from_CreditAuthorizationForm_signingDocument CreditAuthorizationForm[]       @relation("CreditAuthorizationForm_signingDocument")
+  from_Insurance_signingDocument               Insurance[]                     @relation("Insurance_signingDocument")
+
+  @@index([certificateId])
+  @@index([documentPdfId])
+  @@index([signature1Id])
+  @@index([signature2Id])
+  @@index([createdById])
+  @@index([updatedById])
+}
+
+model SungageUser {
+  id                                             String                 @id @default(uuid()) @postgresql.Uuid
+  user                                           User?                  @relation("SungageUser_user", fields: [userId], references: [id])
+  userId                                         String?                @unique @map("userId") @postgresql.Uuid
+  chatUserId                                     String?                @unique
+  createdAt                                      DateTime?              @default(now())
+  updatedAt                                      DateTime?              @updatedAt
+  from_InstallerApplication_applicationProcessor InstallerApplication[] @relation("InstallerApplication_applicationProcessor")
+  from_InstallerApplication_applicationReviewer  InstallerApplication[] @relation("InstallerApplication_applicationReviewer")
+}
+
+model LendingPartnerUser {
+  id                                   String         @id @default(uuid()) @postgresql.Uuid
+  user                                 User?          @relation("LendingPartnerUser_user", fields: [userId], references: [id])
+  userId                               String?        @unique @map("user") @postgresql.Uuid
+  lender                               Lender?        @relation("LendingPartnerUser_lender", fields: [lenderId], references: [id])
+  lenderId                             String?        @map("lender") @postgresql.Uuid
+  createdAt                            DateTime?      @default(now())
+  updatedAt                            DateTime?      @updatedAt
+  createdBy                            User?          @relation("LendingPartnerUser_createdBy", fields: [createdById], references: [id])
+  createdById                          String?        @map("createdBy") @postgresql.Uuid
+  updatedBy                            User?          @relation("LendingPartnerUser_updatedBy", fields: [updatedById], references: [id])
+  updatedById                          String?        @map("updatedBy") @postgresql.Uuid
+  from_Transaction_lockedBy            Transaction[]  @relation("Transaction_lockedBy")
+  from_Transaction_reviewedBy          Transaction[]  @relation("Transaction_reviewedBy")
+  from_Disbursement_fundingCompletedBy Disbursement[] @relation("Disbursement_fundingCompletedBy")
+  from_Disbursement_reviewedBy         Disbursement[] @relation("Disbursement_reviewedBy")
+
+  @@index([lenderId])
+  @@index([createdById])
+  @@index([updatedById])
+}
+
+model FieldHistory {
+  id              String    @id @default(uuid()) @postgresql.Uuid
+  dataUpdatedAt   DateTime? @default(now())
+  dataUpdatedBy   User?     @relation("FieldHistory_dataUpdatedBy", fields: [dataUpdatedById], references: [id])
+  dataUpdatedById String?   @map("updatedById") @postgresql.Uuid
+  modelName       String    @default("")
+  fieldName       String    @default("")
+  itemId          String    @default("")
+  action          String?
+  oldValue        String    @default("")
+  newValue        String    @default("")
+
+  @@index([dataUpdatedById])
+  @@index([itemId])
+}
+
+model Message {
+  id              String       @id @default(uuid()) @postgresql.Uuid
+  parentObjectId  String       @default("")
+  text            String       @default("")
+  attachments     Attachment[] @relation("Attachment_message")
+  isPrivate       Boolean      @default(false)
+  parentMessage   Message?     @relation("Message_parentMessage", fields: [parentMessageId], references: [id])
+  parentMessageId String?      @map("parentMessage") @postgresql.Uuid
+  childMessages   Message[]    @relation("Message_parentMessage")
+  author          User?        @relation("Message_author", fields: [authorId], references: [id])
+  authorId        String?      @map("author") @postgresql.Uuid
+  createdAt       DateTime?    @default(now())
+  updatedAt       DateTime?    @updatedAt
+
+  @@index([parentMessageId])
+  @@index([authorId])
+}
+
+model Transaction {
+  id                       String                               @id @default(uuid()) @postgresql.Uuid
+  borrowerName             String                               @default("")
+  dateSent                 DateTime?
+  disbursementSchedule     TransactionDisbursementScheduleType?
+  fundingAmount            Decimal?                             @default("0.00") @postgresql.Decimal(18, 2)
+  fundingStage             TransactionFundingStageType?
+  lenderApplicationId      String?
+  invalidated              DateTime?
+  loanNumber               String?
+  lockedBy                 LendingPartnerUser?                  @relation("Transaction_lockedBy", fields: [lockedById], references: [id])
+  lockedById               String?                              @map("lockedBy") @postgresql.Uuid
+  status                   TransactionStatusType                @default(Not_Reviewed)
+  submittedForDisbursement DateTime?
+  sungageApplicationId     String                               @default("")
+  termLoanAmount           Decimal                              @default("0.00") @postgresql.Decimal(18, 2)
+  disbursement             Disbursement?                        @relation("Transaction_disbursement", fields: [disbursementId], references: [id])
+  disbursementId           String?                              @map("disbursement") @postgresql.Uuid
+  installerFee             Decimal?                             @postgresql.Decimal(18, 2)
+  lender                   Lender?                              @relation("Transaction_lender", fields: [lenderId], references: [id])
+  lenderId                 String?                              @map("lender") @postgresql.Uuid
+  loanType                 TransactionLoanTypeType?
+  reviewedBy               LendingPartnerUser?                  @relation("Transaction_reviewedBy", fields: [reviewedById], references: [id])
+  reviewedById             String?                              @map("reviewedBy") @postgresql.Uuid
+  rejectionReason          String?
+  isSold                   Boolean                              @default(false)
+  externalId               String?
+  buyDownFee               Decimal?                             @postgresql.Decimal(18, 2)
+  contractFee              Decimal?                             @postgresql.Decimal(18, 2)
+  deferredFee              Decimal?                             @postgresql.Decimal(18, 2)
+  deferredLoanAmount       Decimal?                             @postgresql.Decimal(18, 2)
+  deferredMaturity         DateTime?
+  downPayment              Decimal?                             @postgresql.Decimal(18, 2)
+  installConfirmationDate  DateTime?
+  netFirstFunding          Decimal?                             @postgresql.Decimal(18, 2)
+  originalApplicationDate  DateTime?
+  roofBatteryFee           Decimal?                             @postgresql.Decimal(18, 2)
+  termLoanPaymentAmount    Decimal?                             @postgresql.Decimal(18, 2)
+  totalSystemCost          Decimal?                             @postgresql.Decimal(18, 2)
+  firstFundingDate         DateTime?
+  utilityCompany           String?
+  createdAt                DateTime?                            @default(now())
+  updatedAt                DateTime?                            @updatedAt
+  createdBy                User?                                @relation("Transaction_createdBy", fields: [createdById], references: [id])
+  createdById              String?                              @map("createdBy") @postgresql.Uuid
+  updatedBy                User?                                @relation("Transaction_updatedBy", fields: [updatedById], references: [id])
+  updatedById              String?                              @map("updatedBy") @postgresql.Uuid
+
+  @@index([lockedById])
+  @@index([disbursementId])
+  @@index([lenderId])
+  @@index([reviewedById])
+  @@index([createdById])
+  @@index([updatedById])
+}
+
+model Disbursement {
+  id                   String                 @id @default(uuid()) @postgresql.Uuid
+  attachments          Attachment[]           @relation("Attachment_disbursement")
+  confirmedBy          String                 @default("")
+  lender               Lender?                @relation("Disbursement_lender", fields: [lenderId], references: [id])
+  lenderId             String?                @map("lender") @postgresql.Uuid
+  fundingCompletedBy   LendingPartnerUser?    @relation("Disbursement_fundingCompletedBy", fields: [fundingCompletedById], references: [id])
+  fundingCompletedById String?                @map("fundingCompletedBy") @postgresql.Uuid
+  reviewedBy           LendingPartnerUser?    @relation("Disbursement_reviewedBy", fields: [reviewedById], references: [id])
+  reviewedById         String?                @map("reviewedBy") @postgresql.Uuid
+  status               DisbursementStatusType @default(Draft)
+  submittedDate        DateTime?
+  transactions         Transaction[]          @relation("Transaction_disbursement")
+  createdAt            DateTime?              @default(now())
+  updatedAt            DateTime?              @updatedAt
+  createdBy            User?                  @relation("Disbursement_createdBy", fields: [createdById], references: [id])
+  createdById          String?                @map("createdBy") @postgresql.Uuid
+  updatedBy            User?                  @relation("Disbursement_updatedBy", fields: [updatedById], references: [id])
+  updatedById          String?                @map("updatedBy") @postgresql.Uuid
+
+  @@index([lenderId])
+  @@index([fundingCompletedById])
+  @@index([reviewedById])
+  @@index([createdById])
+  @@index([updatedById])
+}

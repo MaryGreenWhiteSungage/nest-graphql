@@ -7,5 +7,5 @@ CREATE TABLE "ApplicationString" (
     "createdDate" TIMESTAMP(6) NOT NULL,
     "modifiedDate" TIMESTAMP(6) NOT NULL,
 
-    CONSTRAINT "PK_60ebb46ef93da5983bffd9c9766" PRIMARY KEY ("id")
+    CONSTRAINT "ApplicationString_pkey" PRIMARY KEY ("id")
 );
