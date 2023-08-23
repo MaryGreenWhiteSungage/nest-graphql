@@ -13,6 +13,7 @@ import { AppController } from './app.controller';
 import { PrismaService } from './prisma/prisma.service';
 
 import { SeederModule } from './seed/seed.module';
+import { TableDescriptionModule } from './table-description/table-description.module';
 
 const logger: LoggerConfig = new LoggerConfig();
 
@@ -23,6 +24,7 @@ const logger: LoggerConfig = new LoggerConfig();
     WinstonModule.forRoot(logger.console()),
     SeederModule,
     ApplicationStringModule,
+    TableDescriptionModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
